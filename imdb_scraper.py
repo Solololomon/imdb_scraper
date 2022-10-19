@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import re
 
 print('Welcome to the IMDb Film/TV Series Web Scraper (Please fill in all the fields)')
-print()
 
 title = input('Title to search: ')
 
@@ -77,24 +76,31 @@ soup = BeautifulSoup(page.content, 'html.parser')
 results = soup.find(class_='lister-list')
 film_elements = results.find_all(class_='lister-item-content')
 
-for film_element in film_elements:
-    title_element = film_element.find('a')
-    print(f'Title: {title_element.text.strip()}')
-    year_element = film_element.find(class_='lister-item-year text-muted unbold')
-    print(f'Year: {year_element.text.strip()}')
-    genre_element = film_element.find(class_='genre')
-    print(f'Genre: {genre_element.text.strip()}')
-    rating_element = film_element.find('strong')
-    print(f'Rating: {rating_element.text.strip()}')
-    runtime_element = film_element.find(class_='runtime')
-    print(f'Runtime: {runtime_element.text.strip()}')
-    try:
-        age_element = film_element.find(class_='certificate')
-        print(f'Age Rating: {age_element.text.strip()}')
+print()
+print('Films that match your specifications:')
+print()
+
+loops=10
+while loops>0:
+    for film_element in film_elements:
+        title_element = film_element.find('a')
+        print(f'Title: {title_element.text.strip()}')
+        year_element = film_element.find(class_='lister-item-year text-muted unbold')
+        print(f'Year: {year_element.text.strip()}')
+        genre_element = film_element.find(class_='genre')
+        print(f'Genre: {genre_element.text.strip()}')
+        rating_element = film_element.find('strong')
+        print(f'Rating: {rating_element.text.strip()}')
+        runtime_element = film_element.find(class_='runtime')
+        print(f'Runtime: {runtime_element.text.strip()}')
+        try:
+            age_element = film_element.find(class_='certificate')
+            print(f'Age Rating: {age_element.text.strip()}')
+            pass
+        except AttributeError:
+            print('Age Rating: N/a')
         pass
-    except AttributeError:
-        print('Age Rating: N/a')
-        pass
-    print()
+        loops -= 1
+        print()
 
 
