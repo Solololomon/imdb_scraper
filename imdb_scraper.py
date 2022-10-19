@@ -74,15 +74,25 @@ URL = f'https://www.imdb.com/search/title/?title={title}&title_type=feature,tv_s
 page = requests.get(URL)
 soup = BeautifulSoup(page.content, 'html.parser')
 results = soup.find(class_='lister-list')
-film_elements = results.find_all(class_='lister-item-content')
 
-print()
-print('Films that match your specifications:')
-print()
+while True:
+    try:
+        film_elements = results.find_all(class_='lister-item-content')
+        print()
+        print('Films that match your specifications:')
+        print()
+        break
+    except AttributeError:
+        film_elements = []
+        print()
+        print('No results found')
+        break
 
-loops=10
-while loops>0:
+loops = 1
+films = len(film_elements)
+while films > 0:
     for film_element in film_elements:
+        print(f'#{loops}')
         title_element = film_element.find('a')
         print(f'Title: {title_element.text.strip()}')
         year_element = film_element.find(class_='lister-item-year text-muted unbold')
@@ -91,16 +101,24 @@ while loops>0:
         print(f'Genre: {genre_element.text.strip()}')
         rating_element = film_element.find('strong')
         print(f'Rating: {rating_element.text.strip()}')
-        runtime_element = film_element.find(class_='runtime')
-        print(f'Runtime: {runtime_element.text.strip()}')
+        try:
+            runtime_element = film_element.find(class_='runtime')
+            print(f'Runtime: {runtime_element.text.strip()}')
+            pass
+        except AttributeError:
+            print('Runtime: N/a')
         try:
             age_element = film_element.find(class_='certificate')
             print(f'Age Rating: {age_element.text.strip()}')
             pass
         except AttributeError:
             print('Age Rating: N/a')
-        pass
-        loops -= 1
         print()
+        films -= 1
+        loops += 1
+        if loops == 11:
+            break
+
+    break
 
 
